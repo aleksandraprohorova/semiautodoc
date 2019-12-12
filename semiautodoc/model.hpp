@@ -17,9 +17,6 @@ public:
 
   Element();
   Element(std::string name);
-  //Element(const Element& other);
-
-  //bool operator==(const Element& other);
 
   std::string getName();
   std::string getDescription();

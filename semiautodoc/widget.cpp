@@ -87,7 +87,35 @@ void Widget::parseFile()
 
   model->show(std::cerr);
 }
+void showMarkdown(Element::pointer model, std::ostream& out)
+{
+  if (!model || model->getListOfElements().empty())
+  {
+    return;
+  }
+  for (auto element: model->getListOfElements())
+  {
+    out << "### " << element->getName() <<  "\n";
+    if (!element->getDescription().empty())
+    {
+      out << element->getDescription() << "\n";
+    }
+    if (element->isComposite())
+    {
+      out << "\n|Name|Description|\n|-|-|\n";
+      for (auto innerElement: element->getListOfElements())
+      {
+        out << "|" << innerElement->getName() << "|" << innerElement->getDescription() << "|\n";
+      }
+      for (auto innerElement: element->getListOfElements())
+      {
+        showMarkdown(innerElement, out);
+      }
 
+    }
+
+  }
+}
 void Widget::saveDocument()
 {
   QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"));
@@ -99,7 +127,8 @@ void Widget::saveDocument()
     {
         //QTextStream out(&file);
         std::ofstream fout(fileName.toStdString());
-        model->show(fout);
+        showMarkdown(model, fout);
+        //model->show(fout);
     }
   }
 }
