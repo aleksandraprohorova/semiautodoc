@@ -10,6 +10,7 @@
 #include <QList>
 #include <QLineEdit>
 #include <QTextStream>
+#include <QPalette>
 
 
 #include <iostream>
@@ -25,21 +26,30 @@ Widget::Widget(QWidget *parent) :
 {
   ui->setupUi(this);
   
+  setWindowTitle("Semiautodoc");
+  //setWindowIcon(QIcon());
 
   QVBoxLayout* verticalLayout = new QVBoxLayout;
   QPushButton* buttonSelectFileForParsing = new QPushButton("выбор файла");
   QPushButton* buttonParseFile = new QPushButton("пропарсить");
-  QPushButton* buttonSave = new QPushButton("Сохранить как текстовый файл");
+  QPushButton* buttonSave = new QPushButton("Сохранить как markdown-файл");
   labelFileToParse = new QLineEdit();
 
+  /*buttonSelectFileForParsing->setFlat(true);
+  buttonParseFile->setFlat(true);
+  buttonSave->setFlat(true);*/
+
   verticalLayout->addWidget(buttonSelectFileForParsing);
-  verticalLayout->addWidget(buttonParseFile);
   verticalLayout->addWidget(labelFileToParse);
+  verticalLayout->addWidget(buttonParseFile);
   verticalLayout->addWidget(buttonSave);
   verticalLayout->setAlignment(Qt::AlignTop);
 
-  //treeWidget = new QTreeWidget;
-  //treeWidget->setHeaderLabel("Классы и функции");
+  /*QPalette palette;
+  palette.setColor(QPalette::Background, Qt::white);
+  setAutoFillBackground(true);
+  setPalette(palette);*/
+
 
   treeWidget = new QTreeView;
   treeWidget->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
@@ -51,6 +61,8 @@ Widget::Widget(QWidget *parent) :
 
   mainLayout->addLayout(layoutForTreeWidget);
   mainLayout->addLayout(verticalLayout);
+
+  showMaximized();
 
   connect(buttonSelectFileForParsing, SIGNAL(clicked()), this, SLOT(selectFileForParsing()));
   connect(buttonParseFile, SIGNAL(clicked()), this, SLOT(parseFile()));
