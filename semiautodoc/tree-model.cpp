@@ -182,6 +182,25 @@ bool TreeModel::setData(const QModelIndex& index, const QVariant& value, int rol
   return false;
 }
 
+bool TreeModel::removeRows(int position, int rows, const QModelIndex& index)
+{
+  Element::pointer item = rootItem;
+  if (index.isValid())
+  {
+    item = static_cast<Element::pointer>(index.internalPointer());
+  }
+
+  beginRemoveRows(index, position, position+rows-1);
+
+  for (int row = 0; row < rows; ++row)
+  {
+    item->removeElement(position);
+    //stringList.removeAt(position);
+  }
+  endRemoveRows();
+  return true;
+}
+
 /*void TreeModel::setupModelData(const QStringList& lines, TreeItem* parent)
 {
 
