@@ -31,14 +31,17 @@ Widget::Widget(QWidget *parent) :
 
   QVBoxLayout* verticalLayout = new QVBoxLayout;
   QPushButton* buttonSelectFileForParsing = new QPushButton("выбор файла");
+  QPushButton* buttonSelectDirectory = new QPushButton("выбор директории");
   QPushButton* buttonParseFile = new QPushButton("пропарсить");
   QPushButton* buttonSave = new QPushButton("Сохранить как markdown-файл");
   labelFileToParse = new QLineEdit();
+  fileSystemModel = new QFileSystemModel;
 
   /*buttonSelectFileForParsing->setFlat(true);
   buttonParseFile->setFlat(true);
   buttonSave->setFlat(true);*/
 
+  verticalLayout->addWidget(buttonSelectDirectory);
   verticalLayout->addWidget(buttonSelectFileForParsing);
   verticalLayout->addWidget(labelFileToParse);
   verticalLayout->addWidget(buttonParseFile);
@@ -52,8 +55,12 @@ Widget::Widget(QWidget *parent) :
 
 
   treeWidget = new QTreeView;
+  fileSystemView = new QTreeView;
   treeWidget->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-  QVBoxLayout* layoutForTreeWidget = new QVBoxLayout;
+  fileSystemView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  QHBoxLayout* layoutForTreeWidget = new QHBoxLayout;
+
+  layoutForTreeWidget->addWidget(fileSystemView);
   layoutForTreeWidget->addWidget(treeWidget);
 
 
@@ -64,6 +71,7 @@ Widget::Widget(QWidget *parent) :
 
   showMaximized();
 
+  connect(buttonSelectDirectory, SIGNAL(clicked()), this, SLOT(selectDirectory()));
   connect(buttonSelectFileForParsing, SIGNAL(clicked()), this, SLOT(selectFileForParsing()));
   connect(buttonParseFile, SIGNAL(clicked()), this, SLOT(parseFile()));
   connect(buttonSave, SIGNAL(clicked()), this, SLOT(saveDocument()));
@@ -82,6 +90,22 @@ void Widget::selectFileForParsing()
   labelFileToParse->setText(path);
 }
 
+void Widget::selectDirectory()
+{
+  QString path = QFileDialog::getExistingDirectory(0, "Directory Dialog", "");
+  std::cerr << path.toStdString() << "\n";
+  fileSystemModel->setRootPath(path);
+  fileSystemView->setModel(fileSystemModel);
+  fileSystemView->setRootIndex(fileSystemModel->index(path));
+  fileSystemView->show();
+  std::cerr << fileSystemModel->rootPath().toStdString() <<"\n";
+  for (int i = 1; i < fileSystemModel->columnCount(); i++)
+  {
+    fileSystemView->hideColumn(i);
+  }
+  connect(fileSystemView, SIGNAL(clicked(QModelIndex)),this, SLOT(selectFileForParsing(QModelIndex)));
+}
+
 void Widget::parseFile()
 {
   model = Parser::parse(fileToParse.toStdString());
@@ -98,6 +122,13 @@ void Widget::parseFile()
   treeWidget->show();
 
   model->show(std::cerr);
+}
+
+void Widget::selectFileForParsing(QModelIndex index)
+{
+  auto path = fileSystemModel->fileInfo(index).filePath();
+  fileToParse = path;
+  labelFileToParse->setText(path);
 }
 void showMarkdown(Element::pointer model, std::ostream& out)
 {
