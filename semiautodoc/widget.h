@@ -24,7 +24,6 @@ public slots:
   void selectFileForParsing();
   void selectDirectory();
   void selectFileForParsing(QModelIndex index);
-  void parseFile();
   void saveDocument();
 
 private:
@@ -42,6 +41,8 @@ private:
   Element::pointer model;
 
   QTreeView* fileSystemView;
+
+  void parseFile();
 
 };
 

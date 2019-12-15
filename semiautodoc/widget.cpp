@@ -11,6 +11,7 @@
 #include <QLineEdit>
 #include <QTextStream>
 #include <QPalette>
+#include <QMenuBar>
 
 
 #include <iostream>
@@ -27,54 +28,44 @@ Widget::Widget(QWidget *parent) :
   ui->setupUi(this);
   
   setWindowTitle("Semiautodoc");
-  //setWindowIcon(QIcon());
 
-  QVBoxLayout* verticalLayout = new QVBoxLayout;
-  QPushButton* buttonSelectFileForParsing = new QPushButton("выбор файла");
-  QPushButton* buttonSelectDirectory = new QPushButton("выбор директории");
-  QPushButton* buttonParseFile = new QPushButton("пропарсить");
-  QPushButton* buttonSave = new QPushButton("Сохранить как markdown-файл");
-  labelFileToParse = new QLineEdit();
+  QMenuBar* menuBar = new QMenuBar;
+  QMenu*  fileMenu = new QMenu("File");
+
+  fileMenu->addAction("Open file",
+                      this,
+                      SLOT(selectFileForParsing()),
+                      Qt::CTRL + Qt::Key_Q
+                     );
+  fileMenu->addSeparator();
+  fileMenu->addAction("Open directory",
+                      this,
+                      SLOT(selectDirectory()));
+  fileMenu->addSeparator();
+  fileMenu->addAction("Save as markdown",
+                         this,
+                         SLOT(saveDocument()));
+  menuBar->addMenu(fileMenu);
+
+  QVBoxLayout* mainLayout = new QVBoxLayout;
+
+  mainLayout->setMenuBar(menuBar);
+
   fileSystemModel = new QFileSystemModel;
-
-  /*buttonSelectFileForParsing->setFlat(true);
-  buttonParseFile->setFlat(true);
-  buttonSave->setFlat(true);*/
-
-  verticalLayout->addWidget(buttonSelectDirectory);
-  verticalLayout->addWidget(buttonSelectFileForParsing);
-  verticalLayout->addWidget(labelFileToParse);
-  verticalLayout->addWidget(buttonParseFile);
-  verticalLayout->addWidget(buttonSave);
-  verticalLayout->setAlignment(Qt::AlignTop);
-
-  /*QPalette palette;
-  palette.setColor(QPalette::Background, Qt::white);
-  setAutoFillBackground(true);
-  setPalette(palette);*/
-
 
   treeWidget = new QTreeView;
   fileSystemView = new QTreeView;
-  treeWidget->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-  fileSystemView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  //treeWidget->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+  //fileSystemView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   QHBoxLayout* layoutForTreeWidget = new QHBoxLayout;
 
   layoutForTreeWidget->addWidget(fileSystemView);
   layoutForTreeWidget->addWidget(treeWidget);
 
-
-  QHBoxLayout* mainLayout = new QHBoxLayout(this);
-
   mainLayout->addLayout(layoutForTreeWidget);
-  mainLayout->addLayout(verticalLayout);
+  setLayout(mainLayout);
 
   showMaximized();
-
-  connect(buttonSelectDirectory, SIGNAL(clicked()), this, SLOT(selectDirectory()));
-  connect(buttonSelectFileForParsing, SIGNAL(clicked()), this, SLOT(selectFileForParsing()));
-  connect(buttonParseFile, SIGNAL(clicked()), this, SLOT(parseFile()));
-  connect(buttonSave, SIGNAL(clicked()), this, SLOT(saveDocument()));
 
 }
 
@@ -87,7 +78,8 @@ void Widget::selectFileForParsing()
 {
   QString path = QFileDialog::getOpenFileName(this, tr("open file"));
   fileToParse = path;
-  labelFileToParse->setText(path);
+
+  parseFile();
 }
 
 void Widget::selectDirectory()
@@ -111,8 +103,6 @@ void Widget::parseFile()
   model = Parser::parse(fileToParse.toStdString());
   treeModel = new TreeModel(model,treeWidget);
 
-
-
   treeWidget->setModel(treeModel);
 
   EditTextDelegate* editTextDelegate = new EditTextDelegate(treeWidget);
@@ -128,7 +118,7 @@ void Widget::selectFileForParsing(QModelIndex index)
 {
   auto path = fileSystemModel->fileInfo(index).filePath();
   fileToParse = path;
-  labelFileToParse->setText(path);
+  parseFile();
 }
 void showMarkdown(Element::pointer model, std::ostream& out)
 {
@@ -168,10 +158,8 @@ void Widget::saveDocument()
     QFile file(fileName);
     if (file.open(QFile::WriteOnly | QFile::Truncate))
     {
-        //QTextStream out(&file);
         std::ofstream fout(fileName.toStdString());
         showMarkdown(model, fout);
-        //model->show(fout);
     }
   }
 }
