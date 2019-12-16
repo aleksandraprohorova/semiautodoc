@@ -86,6 +86,16 @@ void Element::setDescription(std::string description)
 {
   desctiption_ = description;
 }
+
+void Element::removeElement(int row)
+{
+  auto it = elements_.begin();
+  for (int i = 0; i < row; ++i)
+  {
+    ++it;
+  }
+  elements_.erase(it);
+}
 void Element::show(std::ostream& out)
 {
   for (auto element: elements_)

@@ -31,6 +31,8 @@ public:
   int getRow();
   void setName(std::string name);
   void setDescription(std::string description);
+  
+  void removeElement(int row);
 
 protected:
   listOfElements elements_;

@@ -195,7 +195,6 @@ bool TreeModel::removeRows(int position, int rows, const QModelIndex& index)
   for (int row = 0; row < rows; ++row)
   {
     item->removeElement(position);
-    //stringList.removeAt(position);
   }
   endRemoveRows();
   return true;
