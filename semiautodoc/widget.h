@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <QTreeWidget>
+#include <QFileSystemModel>
 
 #include "tree-model.h"
 
@@ -21,20 +22,27 @@ public:
 
 public slots:
   void selectFileForParsing();
-  void parseFile();
+  void selectDirectory();
+  void selectFileForParsing(QModelIndex index);
   void saveDocument();
 
 private:
   Ui::Widget *ui;
 
+  QString directory;
   QString fileToParse;
 
   QLineEdit* labelFileToParse;
   QTreeView* treeWidget;
 
   TreeModel* treeModel;
+  QFileSystemModel* fileSystemModel;
 
   Element::pointer model;
+
+  QTreeView* fileSystemView;
+
+  void parseFile();
 
 };
 

@@ -29,8 +29,6 @@ SOURCES += \
         main.cpp \
         model.cpp \
         parser.cpp \
-        remove-button-delegate.cpp \
-        tree-item.cpp \
         tree-model.cpp \
         widget.cpp
 
@@ -38,8 +36,6 @@ HEADERS += \
         edit-text-delegate.h \
         model.hpp \
         parser.hpp \
-        remove-button-delegate.h \
-        tree-item.h \
         tree-model.h \
         widget.h
 
