@@ -26,6 +26,10 @@ public slots:
   void selectFileForParsing(QModelIndex index);
   void saveDocument();
 
+  void removeRow();
+  void addRow();
+  void insertNode();
+
 private:
   Ui::Widget *ui;
 

@@ -29,7 +29,8 @@ public:
   Qt::ItemFlags flags(const QModelIndex& index) const override;
   bool setData(const QModelIndex& index, const QVariant& value, int role) override;
   
-  //bool removeRows(int position, int rows, const QModelIndex &index = QModelIndex());
+  bool removeRows(int position, int rows, const QModelIndex& index = QModelIndex());
+  bool insertRows(int position, int rows, const QModelIndex& index = QModelIndex());
 
 private:
   //void setupModelData(const QStringList& lines, TreeItem* parent);
