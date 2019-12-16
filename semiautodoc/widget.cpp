@@ -60,8 +60,11 @@ Widget::Widget(QWidget *parent) :
   QHBoxLayout* layoutForButtonsForEditing = new QHBoxLayout;
   QPushButton* buttonRemoveRow = new QPushButton("Remove row");
   QPushButton* buttonAddRow = new QPushButton("Insert row");
+  QPushButton* buttonInsertNode = new QPushButton("Insert node");
+
   layoutForButtonsForEditing->addWidget(buttonRemoveRow);
   layoutForButtonsForEditing->addWidget(buttonAddRow);
+  layoutForButtonsForEditing->addWidget(buttonInsertNode);
 
   QVBoxLayout* layoutForEditing = new QVBoxLayout;
 
@@ -80,6 +83,7 @@ Widget::Widget(QWidget *parent) :
 
   connect(buttonRemoveRow, SIGNAL(clicked()), this, SLOT(removeRow()));
   connect(buttonAddRow, SIGNAL(clicked()), this, SLOT(addRow()));
+  connect(buttonInsertNode, SIGNAL(clicked()), this, SLOT(insertNode()));
 
 }
 
@@ -191,4 +195,10 @@ void Widget::addRow()
 
   // почему-то не отображается сразу если использовать на вложенных уровнях
   // пока что нельзя добавлять новые уровни вложенности
+}
+
+void Widget::insertNode()
+{
+  QModelIndex index = treeWidget->selectionModel()->currentIndex();
+  treeWidget->model()->insertRows(1, 1, index);
 }

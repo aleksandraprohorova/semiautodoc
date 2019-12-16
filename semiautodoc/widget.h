@@ -28,6 +28,7 @@ public slots:
 
   void removeRow();
   void addRow();
+  void insertNode();
 
 private:
   Ui::Widget *ui;
