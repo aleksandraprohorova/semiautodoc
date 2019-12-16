@@ -33,6 +33,7 @@ public:
   void setDescription(std::string description);
   
   void removeElement(int row);
+  void addElement(int row, Element::pointer newElement);
 
 protected:
   listOfElements elements_;

@@ -96,6 +96,17 @@ void Element::removeElement(int row)
   }
   elements_.erase(it);
 }
+
+void Element::addElement(int row, Element::pointer newElement)
+{
+  newElement->parent = this;
+  auto it = elements_.begin();
+  for (int i = 0; i < row; ++i)
+  {
+    ++it;
+  }
+  elements_.insert(it, newElement);
+}
 void Element::show(std::ostream& out)
 {
   for (auto element: elements_)

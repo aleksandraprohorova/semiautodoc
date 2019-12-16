@@ -190,13 +190,30 @@ bool TreeModel::removeRows(int position, int rows, const QModelIndex& index)
     item = static_cast<Element::pointer>(index.internalPointer());
   }
 
-  beginRemoveRows(index, position, position+rows-1);
+  beginRemoveRows(index, position, position + rows - 1);
 
   for (int row = 0; row < rows; ++row)
   {
     item->removeElement(position);
   }
   endRemoveRows();
+  return true;
+}
+
+bool TreeModel::insertRows(int position, int rows, const QModelIndex& index)
+{
+  Element::pointer item = rootItem;
+  if (index.isValid())
+  {
+    item = static_cast<Element::pointer>(index.internalPointer());
+  }
+  beginInsertRows(index, position, position + rows - 1);
+  for (int row = 0; row < rows; ++row)
+  {
+    Element::pointer newElement = new Element();
+    item->addElement(position, newElement);
+  }
+  endInsertRows();
   return true;
 }
 

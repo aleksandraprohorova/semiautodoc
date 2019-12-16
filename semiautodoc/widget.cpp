@@ -57,15 +57,29 @@ Widget::Widget(QWidget *parent) :
   fileSystemView = new QTreeView;
   //treeWidget->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
   //fileSystemView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  QHBoxLayout* layoutForTreeWidget = new QHBoxLayout;
+  QHBoxLayout* layoutForButtonsForEditing = new QHBoxLayout;
+  QPushButton* buttonRemoveRow = new QPushButton("Remove row");
+  QPushButton* buttonAddRow = new QPushButton("Insert row");
+  layoutForButtonsForEditing->addWidget(buttonRemoveRow);
+  layoutForButtonsForEditing->addWidget(buttonAddRow);
 
-  layoutForTreeWidget->addWidget(fileSystemView);
-  layoutForTreeWidget->addWidget(treeWidget);
+  QVBoxLayout* layoutForEditing = new QVBoxLayout;
 
-  mainLayout->addLayout(layoutForTreeWidget);
+  layoutForEditing->addWidget(treeWidget);
+  layoutForEditing->addLayout(layoutForButtonsForEditing);
+
+  QHBoxLayout* layoutForViews = new QHBoxLayout;
+
+  layoutForViews->addWidget(fileSystemView);
+  layoutForViews->addLayout(layoutForEditing);
+
+  mainLayout->addLayout(layoutForViews);
   setLayout(mainLayout);
 
   showMaximized();
+
+  connect(buttonRemoveRow, SIGNAL(clicked()), this, SLOT(removeRow()));
+  connect(buttonAddRow, SIGNAL(clicked()), this, SLOT(addRow()));
 
 }
 
@@ -162,4 +176,19 @@ void Widget::saveDocument()
         showMarkdown(model, fout);
     }
   }
+}
+
+void Widget::removeRow()
+{
+  QModelIndex index = treeWidget->selectionModel()->currentIndex();
+  treeWidget->model()->removeRows(index.row(), 1, index.parent());
+}
+
+void Widget::addRow()
+{
+  QModelIndex index = treeWidget->selectionModel()->currentIndex();
+  treeWidget->model()->insertRows(index.row(), 1, index.parent());
+
+  // почему-то не отображается сразу если использовать на вложенных уровнях
+  // пока что нельзя добавлять новые уровни вложенности
 }
