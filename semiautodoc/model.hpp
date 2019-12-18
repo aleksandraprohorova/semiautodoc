@@ -17,6 +17,7 @@ public:
 
   Element();
   Element(std::string name);
+  ~Element();
 
   std::string getName();
   std::string getDescription();
@@ -31,7 +32,7 @@ public:
   int getRow();
   void setName(std::string name);
   void setDescription(std::string description);
-  
+
   void removeElement(int row);
   void addElement(int row, Element::pointer newElement);
 

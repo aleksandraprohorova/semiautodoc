@@ -55,8 +55,7 @@ Widget::Widget(QWidget *parent) :
 
   treeWidget = new QTreeView;
   fileSystemView = new QTreeView;
-  //treeWidget->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-  //fileSystemView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
   QHBoxLayout* layoutForButtonsForEditing = new QHBoxLayout;
   QPushButton* buttonRemoveRow = new QPushButton("Remove row");
   QPushButton* buttonAddRow = new QPushButton("Insert row");
@@ -192,9 +191,6 @@ void Widget::addRow()
 {
   QModelIndex index = treeWidget->selectionModel()->currentIndex();
   treeWidget->model()->insertRows(index.row(), 1, index.parent());
-
-  // почему-то не отображается сразу если использовать на вложенных уровнях
-  // пока что нельзя добавлять новые уровни вложенности
 }
 
 void Widget::insertNode()
