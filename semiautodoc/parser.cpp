@@ -10,6 +10,7 @@ Element::pointer Parser::parse(std::string pathToFile)
   std::ifstream in(pathToFile);
   initializeModel(in, model);
   in.close();
+  model->setName(pathToFile);
   return model;
 }
 
