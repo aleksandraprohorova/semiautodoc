@@ -4,8 +4,6 @@
 #include <QPushButton>
 #include "edit-text-delegate.h"
 
-
-
 ModelWidget::ModelWidget(QWidget *parent) : QWidget(parent)
 {
     treeWidget = new QTreeView;
@@ -29,8 +27,6 @@ ModelWidget::ModelWidget(QWidget *parent) : QWidget(parent)
     connect(buttonInsertNode, SIGNAL(clicked()), this, SLOT(insertNode()));
 
     setLayout(layoutForEditing);
-
-    //show();
 }
 
 void ModelWidget::setModel(Element::pointer model)
@@ -39,20 +35,15 @@ void ModelWidget::setModel(Element::pointer model)
     currentModel = model;
     treeModel = new TreeModel(currentModel,treeWidget);
     treeWidget->setModel(treeModel);
+
     for (int i = 0;i < treeModel->columnCount(); ++i)
     {
         treeWidget->resizeColumnToContents(i);
     }
-    //treeWidget->resizeColumnToContents(0);
-    //treeWidget->adjustSize();
-    //treeWidget->resizeColumnToContents();
-    //treeWidget->setColumnWidth(0, treeWidget->minimumSizeHint().width());
 
     EditTextDelegate* editTextDelegate = new EditTextDelegate(treeWidget);
     treeWidget->setItemDelegateForColumn(0, editTextDelegate);
     treeWidget->setItemDelegateForColumn(1, editTextDelegate);
-
-    //treeWidget->show();
 }
 
 std::string ModelWidget::getName()

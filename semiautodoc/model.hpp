@@ -10,7 +10,6 @@
 class Element
 {
 public:
-  //using pointer = std::shared_ptr<Element>;
   using pointer = Element*;
   using listOfElements = std::list<pointer>;
   using vectorOfElements = std::vector<pointer>;

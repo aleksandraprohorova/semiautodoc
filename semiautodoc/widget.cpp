@@ -7,6 +7,8 @@
 
 #include <iostream>
 #include <fstream>
+#include <QStyleFactory>
+#include <QToolTip>
 
 #include "parser.hpp"
 #include "edit-text-delegate.h"
@@ -106,6 +108,7 @@ void Widget::parseFile()
   QStringList l = fileToParse.split('/');
 
   tabWidget->addTab(modelWidget, l.back());
+  tabWidget->setTabToolTip(tabWidget->indexOf(modelWidget), fileToParse);
   tabWidget->setUpdatesEnabled(true);
 }
 
