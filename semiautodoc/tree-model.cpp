@@ -15,8 +15,6 @@ TreeModel::~TreeModel()
 
 QVariant TreeModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  std::cerr << __PRETTY_FUNCTION__ << "  " << role << "\n";
-
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
   {
     if (section == 0)
@@ -30,7 +28,6 @@ QVariant TreeModel::headerData(int section, Qt::Orientation orientation, int rol
 
 QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) const
 {
-  std::cerr << __PRETTY_FUNCTION__ << " row = " << row << ", column = " << column << "\n";
   if (!hasIndex(row, column, parent))
   {
     return QModelIndex();
@@ -53,7 +50,6 @@ QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) con
 
 QModelIndex TreeModel::parent(const QModelIndex &index) const
 {
-  std::cerr << __PRETTY_FUNCTION__ << "\n";
   if (!index.isValid())
   {
     return QModelIndex();
@@ -77,7 +73,6 @@ QModelIndex TreeModel::parent(const QModelIndex &index) const
 
 int TreeModel::rowCount(const QModelIndex &parent) const
 {
-  std::cerr << __PRETTY_FUNCTION__ << "\n";
   auto parentItem = rootItem;
   if (parent.isValid())
   {
@@ -92,7 +87,6 @@ int TreeModel::rowCount(const QModelIndex &parent) const
 
 int TreeModel::columnCount(const QModelIndex &parent) const
 {
-  std::cerr << __PRETTY_FUNCTION__ << "\n";
   if (parent.isValid())
   {
     std::cerr << ", Valid\n";
@@ -104,7 +98,6 @@ int TreeModel::columnCount(const QModelIndex &parent) const
 
 Qt::ItemFlags TreeModel::flags(const QModelIndex& index) const
 {
-  std::cerr << __PRETTY_FUNCTION__ << "\n";
   if (!index.isValid())
   {
     return Qt::ItemIsEnabled;
@@ -114,7 +107,6 @@ Qt::ItemFlags TreeModel::flags(const QModelIndex& index) const
 
 bool TreeModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-  std::cerr << __PRETTY_FUNCTION__ << "\n";
   if (index.isValid() && role == Qt::EditRole)
   {
     Element::pointer item = static_cast<Element::pointer>(index.internalPointer());

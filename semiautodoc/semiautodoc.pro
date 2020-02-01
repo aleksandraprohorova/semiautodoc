@@ -30,14 +30,16 @@ SOURCES += \
         model.cpp \
         parser.cpp \
         tree-model.cpp \
-        widget.cpp
+        widget.cpp \
+    model-widget.cpp
 
 HEADERS += \
         edit-text-delegate.h \
         model.hpp \
         parser.hpp \
         tree-model.h \
-        widget.h
+        widget.h \
+    model-widget.h
 
 FORMS += \
         widget.ui

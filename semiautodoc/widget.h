@@ -2,11 +2,12 @@
 #define WIDGET_H
 
 #include <QWidget>
-#include <QLabel>
-#include <QTreeWidget>
 #include <QFileSystemModel>
+#include <QSplitter>
+#include <unordered_map>
 
 #include "tree-model.h"
+#include "model-widget.h"
 
 namespace Ui {
 class Widget;
@@ -25,10 +26,7 @@ public slots:
   void selectDirectory();
   void selectFileForParsing(QModelIndex index);
   void saveDocument();
-
-  void removeRow();
-  void addRow();
-  void insertNode();
+  void closeTab(int index);
 
 private:
   Ui::Widget *ui;
@@ -36,18 +34,15 @@ private:
   QString directory;
   QString fileToParse;
 
-  QLineEdit* labelFileToParse;
-  QTreeView* treeWidget;
-
-  TreeModel* treeModel;
+  QTreeView* fileSystemView;
   QFileSystemModel* fileSystemModel;
 
-  Element::pointer model;
+  QTabWidget* tabWidget;
+  std::unordered_map<std::string, ModelWidget*> tabs;
 
-  QTreeView* fileSystemView;
+  QSplitter* splitter;
 
   void parseFile();
-
 };
 
 #endif // WIDGET_H

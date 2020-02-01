@@ -22,7 +22,6 @@ Element::~Element()
 }
 void Element::addElement(Element::pointer newElement)
 {
-  //newElement->parent = std::shared_ptr<Element>(this);
   newElement->parent = this;
   elements_.push_back(newElement);
 }
@@ -132,7 +131,6 @@ Class::pointer createClass(std::istream& in, std::string line)
     std::cout << line << " - not a class\n";
     return nullptr;
   }
-  //std::cout << line << " + class\n";
   std::string contentOfClassStr;
   getline(in, tmp, '{');
   while(getline(in, tmp, '}'), tmp.find('{') != std::string::npos)

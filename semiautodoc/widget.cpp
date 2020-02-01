@@ -2,23 +2,15 @@
 #include "ui_widget.h"
 
 #include <QHBoxLayout>
-#include <QPushButton>
-#include <QScrollArea>
-#include <QTreeWidget>
 #include <QFileDialog>
-#include <QLabel>
-#include <QList>
-#include <QLineEdit>
-#include <QTextStream>
-#include <QPalette>
 #include <QMenuBar>
-
 
 #include <iostream>
 #include <fstream>
+#include <QStyleFactory>
+#include <QToolTip>
 
 #include "parser.hpp"
-#include "tree-model.h"
 #include "edit-text-delegate.h"
 
 Widget::Widget(QWidget *parent) :
@@ -47,42 +39,30 @@ Widget::Widget(QWidget *parent) :
                          SLOT(saveDocument()));
   menuBar->addMenu(fileMenu);
 
-  QVBoxLayout* mainLayout = new QVBoxLayout;
+  QHBoxLayout* mainLayout = new QHBoxLayout;
 
   mainLayout->setMenuBar(menuBar);
 
   fileSystemModel = new QFileSystemModel;
-
-  treeWidget = new QTreeView;
   fileSystemView = new QTreeView;
 
-  QHBoxLayout* layoutForButtonsForEditing = new QHBoxLayout;
-  QPushButton* buttonRemoveRow = new QPushButton("Remove row");
-  QPushButton* buttonAddRow = new QPushButton("Insert row");
-  QPushButton* buttonInsertNode = new QPushButton("Insert node");
+  tabWidget = new QTabWidget(this);
+  tabWidget->setUpdatesEnabled(false);
+  tabWidget->setMovable(true);
+  tabWidget->setTabsClosable(true);
 
-  layoutForButtonsForEditing->addWidget(buttonRemoveRow);
-  layoutForButtonsForEditing->addWidget(buttonAddRow);
-  layoutForButtonsForEditing->addWidget(buttonInsertNode);
+  splitter = new QSplitter(Qt::Horizontal);
+  splitter->addWidget(fileSystemView);
+  splitter->addWidget(tabWidget);
+  splitter->setStretchFactor(0, 0.5);
+  splitter->setStretchFactor(1, 1);
 
-  QVBoxLayout* layoutForEditing = new QVBoxLayout;
-
-  layoutForEditing->addWidget(treeWidget);
-  layoutForEditing->addLayout(layoutForButtonsForEditing);
-
-  QHBoxLayout* layoutForViews = new QHBoxLayout;
-
-  layoutForViews->addWidget(fileSystemView);
-  layoutForViews->addLayout(layoutForEditing);
-
-  mainLayout->addLayout(layoutForViews);
+  mainLayout->addWidget(splitter);
   setLayout(mainLayout);
 
   showMaximized();
 
-  connect(buttonRemoveRow, SIGNAL(clicked()), this, SLOT(removeRow()));
-  connect(buttonAddRow, SIGNAL(clicked()), this, SLOT(addRow()));
-  connect(buttonInsertNode, SIGNAL(clicked()), this, SLOT(insertNode()));
+  connect(tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
 
 }
 
@@ -102,33 +82,34 @@ void Widget::selectFileForParsing()
 void Widget::selectDirectory()
 {
   QString path = QFileDialog::getExistingDirectory(0, "Directory Dialog", "");
-  std::cerr << path.toStdString() << "\n";
+
   fileSystemModel->setRootPath(path);
   fileSystemView->setModel(fileSystemModel);
   fileSystemView->setRootIndex(fileSystemModel->index(path));
-  fileSystemView->show();
-  std::cerr << fileSystemModel->rootPath().toStdString() <<"\n";
+
   for (int i = 1; i < fileSystemModel->columnCount(); i++)
   {
     fileSystemView->hideColumn(i);
   }
+
   connect(fileSystemView, SIGNAL(clicked(QModelIndex)),this, SLOT(selectFileForParsing(QModelIndex)));
 }
 
 void Widget::parseFile()
 {
-  model = Parser::parse(fileToParse.toStdString());
-  treeModel = new TreeModel(model,treeWidget);
+  Element::pointer model = Parser::parse(fileToParse.toStdString());
 
-  treeWidget->setModel(treeModel);
+  auto it = tabs.find(fileToParse.toStdString());
+  ModelWidget* modelWidget = (it == tabs.end()) ? new ModelWidget : it->second;
 
-  EditTextDelegate* editTextDelegate = new EditTextDelegate(treeWidget);
-  treeWidget->setItemDelegateForColumn(0, editTextDelegate);
-  treeWidget->setItemDelegateForColumn(1, editTextDelegate);
+  modelWidget->setModel(model);
+  tabs[fileToParse.toStdString()] = modelWidget;
 
-  treeWidget->show();
+  QStringList l = fileToParse.split('/');
 
-  model->show(std::cerr);
+  tabWidget->addTab(modelWidget, l.back());
+  tabWidget->setTabToolTip(tabWidget->indexOf(modelWidget), fileToParse);
+  tabWidget->setUpdatesEnabled(true);
 }
 
 void Widget::selectFileForParsing(QModelIndex index)
@@ -168,33 +149,22 @@ void showMarkdown(Element::pointer model, std::ostream& out)
 }
 void Widget::saveDocument()
 {
+  auto widget = (ModelWidget*)tabWidget->currentWidget();
   QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"));
   if (!fileName.isNull())
   {
-
     QFile file(fileName);
     if (file.open(QFile::WriteOnly | QFile::Truncate))
     {
         std::ofstream fout(fileName.toStdString());
-        showMarkdown(model, fout);
+        showMarkdown(widget->getModel(), fout);
     }
   }
 }
 
-void Widget::removeRow()
+void Widget::closeTab(int index)
 {
-  QModelIndex index = treeWidget->selectionModel()->currentIndex();
-  treeWidget->model()->removeRows(index.row(), 1, index.parent());
-}
-
-void Widget::addRow()
-{
-  QModelIndex index = treeWidget->selectionModel()->currentIndex();
-  treeWidget->model()->insertRows(index.row(), 1, index.parent());
-}
-
-void Widget::insertNode()
-{
-  QModelIndex index = treeWidget->selectionModel()->currentIndex();
-  treeWidget->model()->insertRows(1, 1, index);
+    auto widget = (ModelWidget*)tabWidget->currentWidget();
+    tabs.erase(widget->getName());
+    tabWidget->removeTab(index);
 }

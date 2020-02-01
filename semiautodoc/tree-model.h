@@ -18,7 +18,6 @@ public:
 
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-  // Basic functionality:
   QModelIndex index(int row, int column,
                     const QModelIndex &parent = QModelIndex()) const override;
   QModelIndex parent(const QModelIndex &index) const override;
@@ -33,11 +32,7 @@ public:
   bool insertRows(int position, int rows, const QModelIndex& index = QModelIndex());
 
 private:
-  //void setupModelData(const QStringList& lines, TreeItem* parent);
-  
   Element* rootItem;
-  //std::shared_ptr<Element> rootItem;
-  //TreeItem* rootItem;
 };
 
 #endif // TREEMODEL_H
