@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include <fstream>
-#include <QStyleFactory>
 #include <QToolTip>
 
 #include "parser.hpp"
