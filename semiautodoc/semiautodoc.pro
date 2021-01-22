@@ -22,27 +22,56 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-CONFIG += c++11
+CONFIG += c++17
+
+#QMAKE_PRE_LINK=$$PWD/parser/build_script.sh
+
+parser.target = libparser.a
+parser.commands = cd $$PWD/parser/build/ && \
+                      make
+QMAKE_EXTRA_TARGETS += parser
+#PRE_TARGETDEPS += parser
+#PRE_TARGETDEPS += $$OUT_PWD/parser/build/libparser.a
+
+INCLUDEPATH += $$OUT_PWD/parser/include
+INCLUDEPATH += $$OUT_PWD/gui/include
+
+LIBS+= -L$$OUT_PWD/parser/build/ -lparser
 
 SOURCES += \
-        edit-text-delegate.cpp \
-        main.cpp \
-        model.cpp \
-        parser.cpp \
-        tree-model.cpp \
-        widget.cpp \
-    model-widget.cpp
+        gui/src/edit-text-delegate.cpp \
+        gui/src/main.cpp \
+        gui/src/tree-model.cpp \
+        gui/src/widget.cpp \
+        gui/src/model-widget.cpp \
 
 HEADERS += \
-        edit-text-delegate.h \
-        model.hpp \
-        parser.hpp \
-        tree-model.h \
-        widget.h \
-    model-widget.h
+        gui/include/edit-text-delegate.h \
+        gui/include/tree-model.h \
+        gui/include/widget.h \
+        gui/include/model-widget.h \
 
 FORMS += \
-        widget.ui
+        gui/widget.ui
+
+CONFIG(debug, debug|release) {
+    DESTDIR = build/debug
+    OBJECTS_DIR = build/debug/.obj
+    MOC_DIR = build/debug/.moc
+    RCC_DIR = build/debug/.rcc
+    UI_DIR = build/debug/.ui
+} else {
+    DESTDIR = build/release
+    OBJECTS_DIR = build/release/.obj
+    MOC_DIR = build/release/.moc
+    RCC_DIR = build/release/.rcc
+    UI_DIR = build/release/.ui
+}
+#message("pwd: " $$PWD)
+#message("pwd: " $$OUT_PWD)
+
+
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

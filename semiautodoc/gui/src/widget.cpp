@@ -9,7 +9,7 @@
 #include <fstream>
 #include <QToolTip>
 
-#include "parser.hpp"
+#include "parser/include/parser.hpp"
 #include "edit-text-delegate.h"
 
 Widget::Widget(QWidget *parent) :
