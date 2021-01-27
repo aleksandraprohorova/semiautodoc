@@ -7,7 +7,7 @@
 #include <QTreeView>
 
 #include "tree-model.h"
-#include "parser/include/model.hpp"
+#include "element.hpp"
 
 class ModelWidget : public QWidget
 {

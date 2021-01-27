@@ -9,7 +9,7 @@
 #include <fstream>
 #include <QToolTip>
 
-#include "parser/include/parser.hpp"
+#include "parser.hpp"
 #include "edit-text-delegate.h"
 
 Widget::Widget(QWidget *parent) :
@@ -96,7 +96,8 @@ void Widget::selectDirectory()
 
 void Widget::parseFile()
 {
-  Element::pointer model = Parser::parse(fileToParse.toStdString());
+  std::string tmp = fileToParse.toStdString();
+  Element::pointer model = Parser::parse(tmp);
 
   auto it = tabs.find(fileToParse.toStdString());
   ModelWidget* modelWidget = (it == tabs.end()) ? new ModelWidget : it->second;

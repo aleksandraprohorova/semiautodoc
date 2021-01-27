@@ -3,7 +3,7 @@
 
 #include <QAbstractItemModel>
 
-#include "parser/include/model.hpp"
+#include "element.hpp"
 
 class TreeModel : public QAbstractItemModel
 {

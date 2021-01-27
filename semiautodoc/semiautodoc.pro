@@ -25,13 +25,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++17
 
 #QMAKE_PRE_LINK=$$PWD/parser/build_script.sh
+QMAKE_PRE_LINK= cd $$PWD/parser/build/ && make
+
+
+semiautodoc.depends = parser
 
 parser.target = libparser.a
-parser.commands = cd $$PWD/parser/build/ && \
-                      make
+
 QMAKE_EXTRA_TARGETS += parser
-#PRE_TARGETDEPS += parser
+
+parser.commands = cd $$PWD/parser/build/ && make
+
+PRE_TARGETDEPS += parser
 #PRE_TARGETDEPS += $$OUT_PWD/parser/build/libparser.a
+INCLUDEPATH += $$OUT_PWD/parser/build
 
 INCLUDEPATH += $$OUT_PWD/parser/include
 INCLUDEPATH += $$OUT_PWD/gui/include
@@ -43,13 +50,13 @@ SOURCES += \
         gui/src/main.cpp \
         gui/src/tree-model.cpp \
         gui/src/widget.cpp \
-        gui/src/model-widget.cpp \
+        gui/src/model-widget.cpp
 
 HEADERS += \
         gui/include/edit-text-delegate.h \
         gui/include/tree-model.h \
         gui/include/widget.h \
-        gui/include/model-widget.h \
+        gui/include/model-widget.h
 
 FORMS += \
         gui/widget.ui
@@ -67,11 +74,6 @@ CONFIG(debug, debug|release) {
     RCC_DIR = build/release/.rcc
     UI_DIR = build/release/.ui
 }
-#message("pwd: " $$PWD)
-#message("pwd: " $$OUT_PWD)
-
-
-
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -1,11 +1,9 @@
-#ifndef MODEL
-#define MODEL
+#ifndef PARSER_ELEMENT
+#define PARSER_ELEMENT
 
-#include <string>
 #include <list>
 #include <vector>
-#include <memory>
-
+#include <string>
 
 class Element
 {
@@ -42,21 +40,5 @@ protected:
 
   pointer parent;
 };
-class Function: public Element
-{
-public:
-  using pointer = Function*;
-  Function(std::string name);
-};
-class Class: public Element
-{
-public:
-  using pointer = Class*;
-  Class(std::string name);
-};
 
-void initializeModel(std::istream& in, Element::pointer model);
-Class::pointer createClass(std::istream& in, std::string line);
-Function::pointer createFunction(std::istream& in, std::string line);
-
-#endif // MODEL
+#endif

@@ -13,10 +13,14 @@ set( SOURCES_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/src )
 set( INCLUDES_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/include )
 
 set( parser_SOURCES
-    ${INCLUDES_ROOT}/model.hpp
+    ${INCLUDES_ROOT}/element.hpp
+    ${INCLUDES_ROOT}/class.hpp
+    ${INCLUDES_ROOT}/function.hpp
     ${INCLUDES_ROOT}/parser.hpp
 
-    ${SOURCES_ROOT}/model.cpp
+    ${SOURCES_ROOT}/element.cpp
+    ${SOURCES_ROOT}/class.cpp
+    ${SOURCES_ROOT}/function.cpp
     ${SOURCES_ROOT}/parser.cpp
 )
 
