@@ -10,7 +10,7 @@ Function::Function(std::string name):
 bool Function::isFunctionDeclaration(std::string line)
 {
   std::cmatch result;
-  std::regex regular("[[:blank:]]*(static )?(const )?[[:blank:]]*([[:alnum:]|[:punct:]]+[[:blank:]]+)?[^[:space:]\\(\\)]{1,}\\([^\\(\\)]*\\)( const)?[;]?",std::regex_constants::extended);
+  std::regex regular("[[:blank:]]*(virtual)?(static )?(const )?[[:blank:]]*([[:alnum:]|[:punct:]]+[[:blank:]]+)?[^[:space:]\\(\\)]{1,}[[:blank:]]?\\([^\\(\\)]*\\)( const)?[;]?",std::regex_constants::extended);
 
   return (std::regex_match(line.c_str(), result, regular));
 }

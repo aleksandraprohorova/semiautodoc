@@ -40,10 +40,10 @@ PRE_TARGETDEPS += parser
 #PRE_TARGETDEPS += $$OUT_PWD/parser/build/libparser.a
 INCLUDEPATH += $$OUT_PWD/parser/build
 
-INCLUDEPATH += $$OUT_PWD/parser/include
+INCLUDEPATH += $$OUT_PWD/parser/parser/include
 INCLUDEPATH += $$OUT_PWD/gui/include
 
-LIBS+= -L$$OUT_PWD/parser/build/ -lparser
+LIBS+= -L$$OUT_PWD/parser/build/parser -lparser
 
 SOURCES += \
         gui/src/edit-text-delegate.cpp \

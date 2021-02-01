@@ -21,6 +21,7 @@ std::string Class::getContent(std::istream& in)
   getline(in, line, '{');
   while(getline(in, line, '}'), line.find('{') != std::string::npos)
   {
+    line += "}";
     contentOfClassStr += line;
   }
   contentOfClassStr += line;
