@@ -34,8 +34,10 @@ include_directories("${source_dir}/googletest/include"
 # Unit Tests
 ################################
 # Add test cpp file
-add_executable( runUnitTests test-class-declaration.cpp test-function-declaration.cpp
- test-class-getcontent.cpp test-function-getcontent.cpp)
+add_executable( runUnitTests unit-tests/test-class-declaration.cpp unit-tests/test-function-declaration.cpp
+ unit-tests/test-class-getcontent.cpp unit-tests/test-function-getcontent.cpp
+ unit-tests/test-element.cpp
+ test-parser)
 
 
 

@@ -11,16 +11,19 @@ public:
   using pointer = Element*;
   using listOfElements = std::list<pointer>;
   using vectorOfElements = std::vector<pointer>;
-
+  
   Element();
   Element(std::string name);
   ~Element();
 
-  std::string getName();
-  std::string getDescription();
+  bool operator==(const Element& element) const;
+  bool operator!=(const Element& element) const;
+
+  std::string getName() const;
+  std::string getDescription() const;
   void addElement(pointer newElement);
   void show(std::ostream& out);
-  bool isComposite();
+  bool isComposite() const;
 
   listOfElements& getListOfElements();
   vectorOfElements getVectorOfElements();

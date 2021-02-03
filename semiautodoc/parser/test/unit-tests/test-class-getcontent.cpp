@@ -65,3 +65,42 @@ TEST(testClassGetContent, classWithFunctionDefinitions)
 
     EXPECT_EQ(expectedContent, content);
 }
+
+TEST(testClassGetContent, oneClassAfterAnother)
+{
+    std::string sourceCode = "{\n"
+    "public:              // Access specifier\n"
+    "MyClass(int arg)\n"
+    "{\n"
+    "   field = arg;\n"
+    "}\n"
+    "void myMethod() {  // Method/function defined inside the class\n"
+    "   cout << \"Hello World!\";\n"
+    "}\n"
+    "private:\n"
+    "int field;\n"
+    "}\n"
+    "struct A\n"
+    "{\n"
+    "   int field;\n"
+    "}";
+
+    std::stringstream in;
+    in << sourceCode;
+
+    std::string expectedContent =
+    "\npublic:              // Access specifier\n"
+    "MyClass(int arg)\n"
+    "{\n"
+    "   field = arg;\n"
+    "}\n"
+    "void myMethod() {  // Method/function defined inside the class\n"
+    "   cout << \"Hello World!\";\n"
+    "}\n"
+    "private:\n"
+    "int field;\n";
+
+    std::string content = Class::getContent(in);
+
+    EXPECT_EQ(expectedContent, content);
+}

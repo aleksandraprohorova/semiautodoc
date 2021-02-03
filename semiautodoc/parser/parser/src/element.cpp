@@ -24,7 +24,7 @@ void Element::addElement(Element::pointer newElement)
   newElement->parent = this;
   elements_.push_back(newElement);
 }
-bool Element::isComposite()
+bool Element::isComposite() const
 {
   return !elements_.empty();
 }
@@ -105,12 +105,36 @@ void Element::show(std::ostream& out)
 }
 
 
-std::string Element::getName()
+std::string Element::getName() const
 {
   return name_;
 }
 
-std::string Element::getDescription()
+std::string Element::getDescription() const
 {
   return desctiption_;
+}
+
+bool Element::operator==(const Element& element) const
+{
+  if ((name_ != element.getName()) || (elements_.size() != element.elements_.size()))
+  {
+    return false;
+  }
+  auto it1 = elements_.begin();
+  auto it2 = element.elements_.begin();
+  while (it1 != elements_.end())
+  {
+    if (**it1 != **it2) 
+    {
+      return false;
+    }
+    ++it1;
+    ++it2;
+  }
+  return true;
+}
+bool Element::operator!=(const Element& element) const
+{
+  return !(*this == element);
 }
