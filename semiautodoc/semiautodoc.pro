@@ -25,7 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++17
 
 #QMAKE_PRE_LINK=$$PWD/parser/build_script.sh
-QMAKE_PRE_LINK= cd $$PWD/parser/build/ && make
+QMAKE_PRE_LINK= cd $$PWD/parser/build/ && make gtest && make
 
 
 semiautodoc.depends = parser
@@ -34,7 +34,7 @@ parser.target = libparser.a
 
 QMAKE_EXTRA_TARGETS += parser
 
-parser.commands = cd $$PWD/parser/build/ && make
+#parser.commands = cd $$PWD/parser/build/ && make gtest && make
 
 PRE_TARGETDEPS += parser
 #PRE_TARGETDEPS += $$OUT_PWD/parser/build/libparser.a
@@ -79,3 +79,20 @@ CONFIG(debug, debug|release) {
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    parser/build/parser/libparser.a \
+    parser/build/parser/CMakeFiles/parser.dir/build.make \
+    parser/build/parser/CMakeFiles/parser.dir/CXX.includecache \
+    parser/build/parser/CMakeFiles/parser.dir/depend.internal \
+    parser/build/parser/CMakeFiles/parser.dir/depend.make \
+    parser/build/parser/CMakeFiles/parser.dir/flags.make \
+    parser/build/parser/CMakeFiles/parser.dir/link.txt \
+    parser/build/parser/CMakeFiles/parser.dir/progress.make \
+    parser/build/parser/CMakeFiles/progress.marks \
+    parser/build/parser/CMakeFiles/parser.dir/cmake_clean.cmake \
+    parser/build/parser/CMakeFiles/parser.dir/cmake_clean_target.cmake \
+    parser/build/parser/CMakeFiles/parser.dir/DependInfo.cmake \
+    parser/build/parser/CMakeFiles/CMakeDirectoryInformation.cmake \
+    parser/build/parser/cmake_install.cmake \
+    parser/build/parser/CTestTestfile.cmake
